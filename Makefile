@@ -36,8 +36,7 @@ PKG_HASH:=skip
 include $(INCLUDE_DIR)/package.mk
 
 define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)/$(PKG_NAME)
-	gzip -dc "$(DL_DIR)/$(PKG_SOURCE)" | tar -C $(PKG_BUILD_DIR)/$(PKG_NAME) --strip-components 1 -xf -
+	gzip -dc "$(DL_DIR)/$(PKG_SOURCE)" | tar -C $(PKG_BUILD_DIR)/ --strip-components 1 -xf -
 endef
 
 define Build/Compile
@@ -57,7 +56,27 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_NAME)/$(PKG_NAME) $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_NAME) $(1)/usr/bin/
+endef
+
+$(eval $(call BuildPackage,$(PKG_NAME)))
+
+# ------------------------------------ frps ------------------------------------
+PKG_NAME:=frps
+define Package/$(PKG_NAME)
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=A fast reverse proxy ($(PKG_NAME)).
+	URL:=https://github.com/fatedier/frp
+endef
+
+define Package/$(PKG_NAME)/description
+	https://github.com/fatedier/frp
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(PKG_NAME) $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
